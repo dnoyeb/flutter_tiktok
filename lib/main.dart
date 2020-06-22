@@ -3,6 +3,9 @@ import 'package:flutter_tiktok/page/ad/ad.page.dart';
 import 'package:flutter_tiktok/provider/base.provider.dart';
 import 'package:flutter_tiktok/provider/theme.provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:flutter_i18n/flutter_i18n_delegate.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,7 +31,16 @@ class MyApp extends StatelessWidget {
               primarySwatch: model.themeData,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
-            home: AdPage(),
+            home: MyHomePage(),
+            localizationsDelegates: [
+              FlutterI18nDelegate(
+                useCountryCode: false,
+                fallbackFile: 'en',
+                path: 'assets/i18n',
+              ),
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate
+            ],
           );
         },
       ),
@@ -37,48 +49,73 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomeState createState() => new MyHomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class MyHomeState extends State<MyHomePage> {
+  Locale currentLang;
+  int clicked = 0;
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    super.initState();
+    new Future.delayed(Duration.zero, () async {
+      await FlutterI18n.refresh(context, new Locale('en'));
+      setState(() {
+        currentLang = FlutterI18n.currentLocale(context);
+      });
+    });
+  }
+
+  changeLanguage() {
     setState(() {
-      _counter++;
+      currentLang = currentLang.languageCode == 'en'
+          ? new Locale('en')
+          : new Locale('zh');
+    });
+  }
+
+  incrementCounter() {
+    setState(() {
+      clicked++;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+    return new Scaffold(
+      appBar:
+          new AppBar(title: new Text(FlutterI18n.translate(context, "title"))),
+      body: new Builder(builder: (BuildContext context) {
+        return new Center(
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Text(FlutterI18n.translate(context, "label.main",
+                  Map.fromIterables(["user"], ["Flutter lover"]))),
+              new Text(FlutterI18n.plural(context, "clicked.times", clicked)),
+              new FlatButton(
+                  onPressed: () async {
+                    incrementCounter();
+                  },
+                  child: new Text(
+                      FlutterI18n.translate(context, "button.clickMe"))),
+              new FlatButton(
+                  onPressed: () async {
+                    changeLanguage();
+                    await FlutterI18n.refresh(context, currentLang);
+                    Scaffold.of(context).showSnackBar(new SnackBar(
+                      content: new Text(
+                          FlutterI18n.translate(context, "toastMessage")),
+                    ));
+                  },
+                  child: new Text(
+                      FlutterI18n.translate(context, "button.clickMe")))
+            ],
+          ),
+        );
+      }),
     );
   }
 }

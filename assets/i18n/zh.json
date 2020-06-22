@@ -1,0 +1,15 @@
+{
+    "title": "测试应用",
+    "label": {
+        "main": "哈罗！老子"
+    },
+    "button": {
+        "clickMe": "点击这里"
+    },
+    "toastMessage": "您点击了按钮!",
+    "clicked": {
+        "times-0": "您点击ll了{times}次!",
+        "times-1": "您点击kk了{time}次!",
+        "times-2": "您点击hh了{times}次!"
+    }
+}

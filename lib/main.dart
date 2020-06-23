@@ -1,11 +1,13 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/loaders/decoders/json_decode_strategy.dart';
 import 'package:flutter_tiktok/page/ad/ad.page.dart';
 import 'package:flutter_tiktok/provider/base.provider.dart';
 import 'package:flutter_tiktok/provider/theme.provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:flutter_i18n/flutter_i18n_delegate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_tiktok/net/http.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,12 +33,16 @@ class MyApp extends StatelessWidget {
               primarySwatch: model.themeData,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
-            home: MyHomePage(),
+            home: AdPage(),
             localizationsDelegates: [
               FlutterI18nDelegate(
-                useCountryCode: false,
-                fallbackFile: 'en',
-                path: 'assets/i18n',
+                translationLoader: FileTranslationLoader(
+                  useCountryCode: false,
+                  fallbackFile: 'zh',
+                  basePath: 'assets/i18n',
+                  forcedLocale: Locale('zh'),
+                  decodeStrategies:[JsonDecodeStrategy()]
+                ),
               ),
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate
@@ -48,74 +54,77 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  @override
-  MyHomeState createState() => new MyHomeState();
-}
+// class MyHomePage extends StatefulWidget {
+//   @override
+//   MyHomeState createState() => new MyHomeState();
+// }
 
-class MyHomeState extends State<MyHomePage> {
-  Locale currentLang;
-  int clicked = 0;
+// class MyHomeState extends State<MyHomePage> {
+//   Locale currentLang;
+//   int clicked = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    new Future.delayed(Duration.zero, () async {
-      await FlutterI18n.refresh(context, new Locale('en'));
-      setState(() {
-        currentLang = FlutterI18n.currentLocale(context);
-      });
-    });
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     new Future.delayed(Duration.zero, () async {
+//       await FlutterI18n.refresh(context, new Locale('zh'));
+//       // setState(() {
+//       //   currentLang = FlutterI18n.currentLocale(context);
+//       // });
+//     });
+//   }
 
-  changeLanguage() {
-    setState(() {
-      currentLang = currentLang.languageCode == 'en'
-          ? new Locale('en')
-          : new Locale('zh');
-    });
-  }
+//   changeLanguage() {
+//     // setState(() {
+//     //   currentLang = currentLang.languageCode == 'zh'
+//     //       ? new Locale('zh')
+//     //       : new Locale('en');
+//     // });
+//   }
 
-  incrementCounter() {
-    setState(() {
-      clicked++;
-    });
-  }
+//   incrementCounter() async {
+//     setState(() {
+//       clicked++;
+//     });
+//     Response response = await dio.get('user/1');
+//     print(response);
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar:
-          new AppBar(title: new Text(FlutterI18n.translate(context, "title"))),
-      body: new Builder(builder: (BuildContext context) {
-        return new Center(
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              new Text(FlutterI18n.translate(context, "label.main",
-                  Map.fromIterables(["user"], ["Flutter lover"]))),
-              new Text(FlutterI18n.plural(context, "clicked.times", clicked)),
-              new FlatButton(
-                  onPressed: () async {
-                    incrementCounter();
-                  },
-                  child: new Text(
-                      FlutterI18n.translate(context, "button.clickMe"))),
-              new FlatButton(
-                  onPressed: () async {
-                    changeLanguage();
-                    await FlutterI18n.refresh(context, currentLang);
-                    Scaffold.of(context).showSnackBar(new SnackBar(
-                      content: new Text(
-                          FlutterI18n.translate(context, "toastMessage")),
-                    ));
-                  },
-                  child: new Text(
-                      FlutterI18n.translate(context, "button.clickMe")))
-            ],
-          ),
-        );
-      }),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return new Scaffold(
+//       appBar:
+//           new AppBar(title: new Text(FlutterI18n.translate(context, "title"))),
+//       body: new Builder(builder: (BuildContext context) {
+//         return new Center(
+//           child: new Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: <Widget>[
+//               new Text(FlutterI18n.plural(context, "clicked.times", clicked)),
+//               new FlatButton(
+//                   onPressed: () async {
+//                     await FlutterI18n.refresh(context, new Locale('zh'));
+//                     setState(() {});
+//                     // incrementCounter();
+//                   },
+//                   child: new Text(
+//                       FlutterI18n.translate(context, "button.clickMe"))),
+//               new FlatButton(
+//                   onPressed: () async {
+//                     changeLanguage();
+//                     await FlutterI18n.refresh(context, new Locale('en'));
+//                     setState(() {});
+//                     Scaffold.of(context).showSnackBar(new SnackBar(
+//                       content: new Text(
+//                           FlutterI18n.translate(context, "toastMessage")),
+//                     ));
+//                   },
+//                   child: new Text(
+//                       FlutterI18n.translate(context, "button.clickMe")))
+//             ],
+//           ),
+//         );
+//       }),
+//     );
+//   }
+// }

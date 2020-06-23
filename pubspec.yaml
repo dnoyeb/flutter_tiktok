@@ -34,7 +34,7 @@ dependencies:
   #网络请求
   dio: ^3.0.9
   #i18n
-  flutter_i18n: ^0.8.2
+  flutter_i18n: ^0.16.2
   #json序列化
   json_annotation: ^3.0.1
 
@@ -82,4 +82,5 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
     - assets/img/
+    - assets/video/
     - assets/i18n/

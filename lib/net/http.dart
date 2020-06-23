@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 Dio dio = Dio(BaseOptions(
-  baseUrl: "http://localhost:3000/",
+  baseUrl: "http://10.1.36.49:3000/",
   connectTimeout: 5000,
   receiveTimeout: 100000,
   // 5s

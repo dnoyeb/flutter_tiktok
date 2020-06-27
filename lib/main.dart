@@ -1,19 +1,61 @@
 import 'package:dio/dio.dart';
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/loaders/decoders/json_decode_strategy.dart';
 import 'package:flutter_tiktok/page/ad/ad.page.dart';
 import 'package:flutter_tiktok/provider/base.provider.dart';
 import 'package:flutter_tiktok/provider/theme.provider.dart';
+import 'package:flutter_tiktok/utils/log_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_tiktok/net/http.dart';
+import 'package:flutter_tiktok/net/dioUtils.dart';
 
-void main() {
+import 'config/Constant.dart';
+import 'net/intercept.dart';
+
+Future<void> main() async {
+//  debugProfileBuildsEnabled = true;
+//  debugPaintLayerBordersEnabled = true;
+//  debugProfilePaintsEnabled = true;
+//  debugRepaintRainbowEnabled = true;
+  WidgetsFlutterBinding.ensureInitialized();
+
+  /// sp初始化
+  await SpUtil.getInstance();
   runApp(MyApp());
+  // 透明状态栏
+  // if (Device.isAndroid) {
+  //   SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+  //   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+  // }
 }
 
 class MyApp extends StatelessWidget {
+  MyApp() {
+    Log.init();
+    initDio();
+  }
+
+  void initDio() {
+    List<Interceptor> interceptors = [];
+
+    /// 统一添加身份验证请求头
+    interceptors.add(AuthInterceptor());
+
+    /// 刷新Token
+    interceptors.add(TokenInterceptor());
+
+    /// 打印Log(生产模式去除)
+    if (!Constant.inProduction) {
+      interceptors.add(LoggingInterceptor());
+    }
+    setInitDio(
+      baseUrl: 'http://10.1.36.49:3000/',
+      interceptors: interceptors,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -37,12 +79,11 @@ class MyApp extends StatelessWidget {
             localizationsDelegates: [
               FlutterI18nDelegate(
                 translationLoader: FileTranslationLoader(
-                  useCountryCode: false,
-                  fallbackFile: 'zh',
-                  basePath: 'assets/i18n',
-                  forcedLocale: Locale('zh'),
-                  decodeStrategies:[JsonDecodeStrategy()]
-                ),
+                    useCountryCode: false,
+                    fallbackFile: 'zh',
+                    basePath: 'assets/i18n',
+                    forcedLocale: Locale('zh'),
+                    decodeStrategies: [JsonDecodeStrategy()]),
               ),
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate

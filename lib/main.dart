@@ -1,18 +1,19 @@
-import 'package:dio/dio.dart';
-import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/loaders/decoders/json_decode_strategy.dart';
-import 'package:flutter_tiktok/page/ad/ad.page.dart';
+import 'package:dio/dio.dart';
+
+import 'package:provider/provider.dart';
 import 'package:flutter_tiktok/provider/base.provider.dart';
 import 'package:flutter_tiktok/provider/theme.provider.dart';
-import 'package:flutter_tiktok/utils/log_utils.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_tiktok/net/dioUtils.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:flutter_i18n/loaders/decoders/json_decode_strategy.dart';
 
+import 'package:flustars/flustars.dart';
+import 'package:flutter_tiktok/utils/log_utils.dart';
 import 'config/Constant.dart';
-import 'net/intercept.dart';
+import 'package:flutter_tiktok/net/net.dart';
+
+import 'package:flutter_tiktok/page/ad/ad.page.dart';
 
 Future<void> main() async {
 //  debugProfileBuildsEnabled = true;

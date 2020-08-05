@@ -25,7 +25,6 @@ export class UserService {
         if (user) {
             const errors = { username: 'Username and email must be unique.' };
             throw new HttpException({ message: 'Input data validation failed', errors }, HttpStatus.BAD_REQUEST);
-
         }
 
         // create new user

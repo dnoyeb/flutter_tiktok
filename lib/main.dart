@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_tiktok/net/dioUtils.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter_tiktok/provider/base.provider.dart';
@@ -52,7 +53,8 @@ class MyApp extends StatelessWidget {
       interceptors.add(LoggingInterceptor());
     }
     setInitDio(
-      baseUrl: 'http://10.1.36.49:3000/',
+      // baseUrl: 'http://10.1.36.49:3000/',
+      baseUrl: 'http://10.222.128.72:3000/',
       interceptors: interceptors,
     );
   }
@@ -76,7 +78,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: model.themeData,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
-            home: AdPage(),
+            home: MyHomePage(),
             localizationsDelegates: [
               FlutterI18nDelegate(
                 translationLoader: FileTranslationLoader(
@@ -96,77 +98,78 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// class MyHomePage extends StatefulWidget {
-//   @override
-//   MyHomeState createState() => new MyHomeState();
-// }
+class MyHomePage extends StatefulWidget {
+  @override
+  MyHomeState createState() => new MyHomeState();
+}
 
-// class MyHomeState extends State<MyHomePage> {
-//   Locale currentLang;
-//   int clicked = 0;
+class MyHomeState extends State<MyHomePage> {
+  Locale currentLang;
+  int clicked = 0;
+  Dio dio = DioUtils.instance.dio;
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     new Future.delayed(Duration.zero, () async {
-//       await FlutterI18n.refresh(context, new Locale('zh'));
-//       // setState(() {
-//       //   currentLang = FlutterI18n.currentLocale(context);
-//       // });
-//     });
-//   }
+  @override
+  void initState() {
+    super.initState();
+    new Future.delayed(Duration.zero, () async {
+      await FlutterI18n.refresh(context, new Locale('zh'));
+      // setState(() {
+      //   currentLang = FlutterI18n.currentLocale(context);
+      // });
+    });
+  }
 
-//   changeLanguage() {
-//     // setState(() {
-//     //   currentLang = currentLang.languageCode == 'zh'
-//     //       ? new Locale('zh')
-//     //       : new Locale('en');
-//     // });
-//   }
+  changeLanguage() {
+    // setState(() {
+    //   currentLang = currentLang.languageCode == 'zh'
+    //       ? new Locale('zh')
+    //       : new Locale('en');
+    // });
+  }
 
-//   incrementCounter() async {
-//     setState(() {
-//       clicked++;
-//     });
-//     Response response = await dio.get('user/1');
-//     print(response);
-//   }
+  incrementCounter() async {
+    setState(() {
+      clicked++;
+    });
+    Response response = await dio.get('user/1');
+    print(response);
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return new Scaffold(
-//       appBar:
-//           new AppBar(title: new Text(FlutterI18n.translate(context, "title"))),
-//       body: new Builder(builder: (BuildContext context) {
-//         return new Center(
-//           child: new Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: <Widget>[
-//               new Text(FlutterI18n.plural(context, "clicked.times", clicked)),
-//               new FlatButton(
-//                   onPressed: () async {
-//                     await FlutterI18n.refresh(context, new Locale('zh'));
-//                     setState(() {});
-//                     // incrementCounter();
-//                   },
-//                   child: new Text(
-//                       FlutterI18n.translate(context, "button.clickMe"))),
-//               new FlatButton(
-//                   onPressed: () async {
-//                     changeLanguage();
-//                     await FlutterI18n.refresh(context, new Locale('en'));
-//                     setState(() {});
-//                     Scaffold.of(context).showSnackBar(new SnackBar(
-//                       content: new Text(
-//                           FlutterI18n.translate(context, "toastMessage")),
-//                     ));
-//                   },
-//                   child: new Text(
-//                       FlutterI18n.translate(context, "button.clickMe")))
-//             ],
-//           ),
-//         );
-//       }),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar:
+          new AppBar(title: new Text(FlutterI18n.translate(context, "title"))),
+      body: new Builder(builder: (BuildContext context) {
+        return new Center(
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Text(FlutterI18n.plural(context, "clicked.times", clicked)),
+              new FlatButton(
+                  onPressed: () async {
+                    await FlutterI18n.refresh(context, new Locale('zh'));
+                    setState(() {});
+                    incrementCounter();
+                  },
+                  child: new Text(
+                      FlutterI18n.translate(context, "button.clickMe"))),
+              new FlatButton(
+                  onPressed: () async {
+                    changeLanguage();
+                    await FlutterI18n.refresh(context, new Locale('en'));
+                    setState(() {});
+                    Scaffold.of(context).showSnackBar(new SnackBar(
+                      content: new Text(
+                          FlutterI18n.translate(context, "toastMessage")),
+                    ));
+                  },
+                  child: new Text(
+                      FlutterI18n.translate(context, "button.clickMe")))
+            ],
+          ),
+        );
+      }),
+    );
+  }
+}

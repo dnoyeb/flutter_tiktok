@@ -17,10 +17,10 @@ import { UserController } from './user/user.controller';
         host: 'localhost',
         port: 3306,
         username: 'root',
-        password: 'Gitv2018',
+        password: 'SINA2020',
         database: 'TIKTOK',
         entities: [UserEntity],
-        synchronize: true,
+        synchronize: false,
       }
     ),
     UserModule,

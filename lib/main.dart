@@ -53,8 +53,8 @@ class MyApp extends StatelessWidget {
       interceptors.add(LoggingInterceptor());
     }
     setInitDio(
-      // baseUrl: 'http://10.1.36.49:3000/',
-      baseUrl: 'http://10.222.128.72:3000/',
+      baseUrl: 'http://127.0.0.1:3000/',
+      // baseUrl: 'http://10.222.128.72:3000/',
       interceptors: interceptors,
     );
   }
@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: model.themeData,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
-            home: MyHomePage(),
+            home: AdPage(),
             localizationsDelegates: [
               FlutterI18nDelegate(
                 translationLoader: FileTranslationLoader(
@@ -106,7 +106,7 @@ class MyHomePage extends StatefulWidget {
 class MyHomeState extends State<MyHomePage> {
   Locale currentLang;
   int clicked = 0;
-  Dio dio = DioUtils.instance.dio;
+  Dio dio = DioUtils().dio;
 
   @override
   void initState() {

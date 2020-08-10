@@ -20,7 +20,7 @@ import { UserController } from './user/user.controller';
         password: 'SINA2020',
         database: 'TIKTOK',
         entities: [UserEntity],
-        synchronize: false,
+        synchronize: true,
       }
     ),
     UserModule,

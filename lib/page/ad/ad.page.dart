@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:flutter_tiktok/page/tab/tab.page.dart';
 import 'package:flutter_tiktok/provider/theme.provider.dart';
 import 'package:provider/provider.dart';
 
@@ -13,9 +16,32 @@ class AdPage extends StatefulWidget {
 
 class _AdPageState extends State<AdPage> {
   final String title = 'AdPage';
+  Timer timer;
+  @override
+  void initState() {
+    super.initState();
+    timer = new Timer(new Duration(seconds: 5), () {
+      Navigator.pushReplacement(
+        context,
+        new MaterialPageRoute(builder: (context) => TabPage()),
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    timer = null;
+    super.dispose();
+  }
 
   void nextPage() {
-    print(123);
+    timer?.cancel();
+    timer = null;
+    Navigator.pushReplacement(
+      context,
+      new MaterialPageRoute(builder: (context) => TabPage()),
+    );
   }
 
   @override
@@ -32,21 +58,33 @@ class _AdPageState extends State<AdPage> {
             height: double.infinity,
           ),
           Positioned(
-              left: 30.0,
-              top: 30.0,
-              width: 60.0,
-              height: 20.0,
+            left: 30.0,
+            top: 30.0,
+            width: 60.0,
+            child: Opacity(
+              opacity: 0.8,
               child: Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.all(2.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    const Radius.circular(15.0),
+                  ),
+                  border: Border.all(width: 1.0, color: Colors.white),
+                  color: Colors.grey[600],
+                ),
                 child: GestureDetector(
-                  onTap: nextPage, //写入方法名称就可以了，但是是无参的
+                  onTap: nextPage,
                   child: Text(
-                    '跳过',
+                    FlutterI18n.translate(context, "pass"),
                     style: TextStyle(
                       color: Colors.white,
                     ),
                   ),
                 ),
-              )),
+              ),
+            ),
+          ),
         ]),
       ),
       // appBar: AppBar(

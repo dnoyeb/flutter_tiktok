@@ -38,7 +38,7 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  _onItemTapped(int index) {
+  _onItemTapped(index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -48,61 +48,64 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: pages[_selectedIndex],
-      // bottomNavigationBar: Container(
-      //   height: 60.0,
-      //   color: Color.fromRGBO(0, 0, 0, 1),
-      //   child: TabBar(
-      //     isScrollable: false,
-      //     controller: _tabController,
-      //     indicatorColor: Color.fromRGBO(255, 255, 255, 0),
-      //     unselectedLabelColor: Color.fromRGBO(255, 255, 255, .5),
-      //     labelColor: Color.fromRGBO(255, 255, 255, 1),
-      //     indicatorWeight: 0.1,
-      //     onTap: (value) {
-      //       // print(value);
-      //     },
-      //     tabs: <Widget>[
-      //       Tab(text: FlutterI18n.translate(context, "tabName.tab0")),
-      //       Tab(text: FlutterI18n.translate(context, "tabName.tab1")),
-      //       Tab(text: '123'),
-      //       Tab(text: FlutterI18n.translate(context, "tabName.tab3")),
-      //       Tab(text: FlutterI18n.translate(context, "tabName.tab4")),
-      //     ],
-      //   ),
-      // ),
-      bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Theme.of(context).primaryColor,
-        backgroundColor: Color.fromRGBO(0, 0, 0, 1),
-        // 底部导航
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text(FlutterI18n.translate(context, "tabName.tab0")),
-            backgroundColor: Color.fromRGBO(0, 0, 0, 1),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.remove_red_eye),
-            title: Text(FlutterI18n.translate(context, "tabName.tab1")),
-            backgroundColor: Color.fromRGBO(0, 0, 0, 1),
-          ),
-           BottomNavigationBarItem(
-            icon: Icon(Icons.remove_red_eye),
-            title: Text(FlutterI18n.translate(context, "tabName.tab1")),
-            backgroundColor: Color.fromRGBO(0, 0, 0, 1),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info),
-            title: Text(FlutterI18n.translate(context, "tabName.tab3")),
-            backgroundColor: Color.fromRGBO(0, 0, 0, 1),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            title: Text(FlutterI18n.translate(context, "tabName.tab4")),
-            backgroundColor: Color.fromRGBO(0, 0, 0, 1),
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+      bottomNavigationBar: _bottomAppBar(),
+    );
+  }
+
+  Widget tabItem(int index, String name) {
+    return Expanded(
+      child: GestureDetector(
+        child: Container(
+          color: Color.fromRGBO(0, 0, 0, 0),
+          alignment: Alignment.center,
+          child: index != 2
+              ? Text(
+                  FlutterI18n.translate(context, name),
+                  style: TextStyle(
+                      color: Color.fromRGBO(
+                          255, 255, 255, index == _selectedIndex ? 1 : .5)),
+                )
+              : Image.asset(
+                  "assets/images/plus.png",
+                  width: 45.0,
+                  height: 45.0,
+                ),
+        ),
+        onTap: () => _onItemTapped(index),
+      ),
+    );
+  }
+
+  List<String> nameArr = [
+    "tabName.tab0",
+    "tabName.tab1",
+    "tabName.tab2",
+    "tabName.tab3",
+    "tabName.tab4"
+  ];
+  List<Widget> diyTab() {
+    List<Widget> tabbar = [];
+    for (var i = 0; i < nameArr.length; i++) {
+      tabbar.add(tabItem(i, nameArr[i]));
+    }
+    return tabbar;
+  }
+
+  BottomAppBar _bottomAppBar() {
+    double width = MediaQuery.of(context).size.width;
+    double height = 60;
+
+    return BottomAppBar(
+      child: Container(
+        color: Colors.black,
+        width: width,
+        height: height,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: diyTab(),
+        ),
       ),
     );
   }

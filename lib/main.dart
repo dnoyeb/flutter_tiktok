@@ -54,7 +54,6 @@ class MyApp extends StatelessWidget {
     }
     setInitDio(
       baseUrl: 'http://127.0.0.1:3000/',
-      // baseUrl: 'http://10.222.128.72:3000/',
       interceptors: interceptors,
     );
   }
